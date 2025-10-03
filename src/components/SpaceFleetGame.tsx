@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 import { useAccount, useWriteContract } from "wagmi";
-import { useFightingContract } from "../hooks/useFightingContract";
+import { useFightingContract, ShipNFT } from "../hooks/useFightingContract";
 
 interface SpaceshipNFT {
   id: number;
@@ -41,14 +41,14 @@ interface SpaceFleetGameProps {
 
 const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   onClose,
-  activeTournamentId,
-  onTournamentCompleted,
+  // activeTournamentId,
+  // onTournamentCompleted,
   onNavigateToTournaments,
   onNavigateToMenu,
   practiceMode = false
 }) => {
-  const { address, isConnected } = useAccount();
-  const { writeContractAsync } = useWriteContract();
+  const { /* address, */ isConnected } = useAccount();
+  // const { writeContractAsync } = useWriteContract();
   const {
     selectedShip: contractSelectedShip,
     playerShips: contractPlayerShips,
@@ -58,8 +58,8 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     isConnected: contractConnected,
   } = useFightingContract();
 
-  const [selectedShip, setSelectedShip] = useState(null);
-  const [playerShips, setPlayerShips] = useState([]);
+  const [selectedShip, setSelectedShip] = useState<ShipNFT | null>(null);
+  const [playerShips, setPlayerShips] = useState<ShipNFT[]>([]);
   const [stakeTxStatus, setStakeTxStatus] = useState("");
   const [stakeTxMessage, setStakeTxMessage] = useState("");
   const [loadingShipId, setLoadingShipId] = useState<number | null>(null);
@@ -173,11 +173,11 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   const starsRef = useRef<THREE.Points | null>(null);
   const animationIdRef = useRef<number>(0);
 
-  const [screenEffects, setScreenEffects] = useState({
-    hit: false,
-    shake: false,
-    sparks: false,
-  });
+  // const [screenEffects, setScreenEffects] = useState({
+  //   hit: false,
+  //   shake: false,
+  //   sparks: false,
+  // });
 
   const screenEffectsRef = useRef({
     cameraShake: 0,
@@ -225,7 +225,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
 
       if (isRound) {
         geometry = new THREE.SphereGeometry(0.1 + Math.random() * 0.15);
-        material = new THREE.MeshBasicMaterial({
+        material = new THREE.MeshStandardMaterial({
           color: Math.random() > 0.5 ? 0xff4400 : 0xffaa00,
           emissive: 0xff2200,
           transparent: true,
@@ -233,7 +233,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
         });
       } else {
         geometry = new THREE.BoxGeometry(0.1 + Math.random() * 0.2, 0.1 + Math.random() * 0.2, 0.1 + Math.random() * 0.2);
-        material = new THREE.MeshBasicMaterial({
+        material = new THREE.MeshStandardMaterial({
           color: Math.random() > 0.5 ? 0xff6600 : 0xff0000,
           emissive: 0x442200,
           transparent: true,
@@ -1040,6 +1040,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
 
 
   // Create enemy ship
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const createEnemy = useCallback(() => {
     if (!sceneRef.current) {
       return;
@@ -1093,6 +1094,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   }, []);
 
   // Create asteroid
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const createAsteroid = useCallback(() => {
     if (!sceneRef.current) return;
 
@@ -1121,13 +1123,14 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   }, []);
 
   // Create projectile
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const createProjectile = useCallback((position: THREE.Vector3, direction: THREE.Vector3, isPlayer: boolean = true) => {
     if (!sceneRef.current) return;
 
     const projectile = new THREE.Group();
 
     const geometry = new THREE.SphereGeometry(0.25);
-    const material = new THREE.MeshBasicMaterial({
+    const material = new THREE.MeshStandardMaterial({
       color: isPlayer ? 0x00ff00 : 0xff0000,
       emissive: isPlayer ? 0x004400 : 0x440000
     });
@@ -1144,13 +1147,14 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   }, []);
 
   // Create resource pickup
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const createResource = useCallback(() => {
     if (!sceneRef.current) return;
 
     const resource = new THREE.Group();
 
     const geometry = new THREE.OctahedronGeometry(0.3);
-    const material = new THREE.MeshBasicMaterial({
+    const material = new THREE.MeshStandardMaterial({
       color: 0xffff00,
       emissive: 0x444400
     });
@@ -1570,7 +1574,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
         } else {
           // Simple sphere for interceptor
           const geometry = new THREE.SphereGeometry(bulletSize);
-          const material = new THREE.MeshBasicMaterial({
+          const material = new THREE.MeshStandardMaterial({
             color: bulletColor,
             emissive: 0x002200
           });
@@ -1787,7 +1791,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
         if (sceneRef.current) {
           const projectile = new THREE.Group();
           const geometry = new THREE.SphereGeometry(0.15);
-          const material = new THREE.MeshBasicMaterial({
+          const material = new THREE.MeshStandardMaterial({
             color: 0xff4500, // Fire orange color
             emissive: 0x441100 // Fire glow effect
           });
@@ -2077,9 +2081,12 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     if (!practiceMode && contractConnected && contractSelectedShip && submitCombatResult) {
       try {
         await submitCombatResult(
-          gameState.score,
-          gameState.enemiesDestroyed,
-          gameState.resourcesCollected
+          contractSelectedShip.id,          // shipId
+          gameState.score,                   // score
+          gameState.enemiesDestroyed,        // distance (using enemies destroyed)
+          gameState.asteroidsDestroyed,      // obstaclesAvoided (using asteroids destroyed)
+          gameState.resourcesCollected,      // bonusCollected
+          0                                   // tournamentId (0 for no tournament)
         );
       } catch (error) {
         console.error("Failed to submit combat result:", error);
@@ -2135,12 +2142,13 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     screenEffectsRef.current = {
       cameraShake: 0,
       shakeIntensity: 0,
+      hitFlashTimer: 0,
     };
 
     // Reset ship position
-    if (shipRef.current) {
-      shipRef.current.position.set(0, 0, 0);
-      shipRef.current.rotation.set(0, 0, 0);
+    if (spaceshipRef.current) {
+      spaceshipRef.current.position.set(0, 0, 0);
+      spaceshipRef.current.rotation.set(0, 0, 0);
     }
 
     animate();
@@ -2369,7 +2377,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
 
                     {/* Ship stats */}
                     <div className="text-xs text-gray-500 mb-2">
-                      Wins: {ship.wins} • Races: {ship.races} • XP: {ship.experience}
+                      Wins: {ship.wins} • Combats: {ship.combats} • XP: {ship.experience}
                     </div>
 
                     {/* Staking status */}
@@ -2504,7 +2512,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
         </div>
 
         {/* CSS animations for Tailwind */}
-        <style jsx>{`
+        <style>{`
           @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(180deg); }

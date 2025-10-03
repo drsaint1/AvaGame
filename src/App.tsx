@@ -145,10 +145,6 @@ function GameWrapper() {
     setCurrentView("stakemanager");
   };
 
-  const handleBreeding = () => {
-    setCurrentView("breeding");
-  };
-
   const handleMintStarterShip = async () => {
     try {
       setMintingStatus("wallet_confirm");
@@ -828,7 +824,7 @@ function GameWrapper() {
 
   return (
     <div style={{ minHeight: "100vh", position: "relative" }}>
-      {currentView !== "fighting" && (
+      {currentView !== "fighting" && currentView !== "space" && (
         <div
           style={{
             position: "absolute",

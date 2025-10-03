@@ -406,9 +406,9 @@ const ShipGarage: React.FC<ShipGarageProps> = ({ onClose }) => {
           </span>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <span style={{ color: "#fbbf24", fontSize: "12px" }}>Wins/Races</span>
+          <span style={{ color: "#fbbf24", fontSize: "12px" }}>Wins/Combats</span>
           <span style={{ color: "#fbbf24", fontSize: "12px" }}>
-            {ship.wins}/{ship.races}
+            {ship.wins}/{ship.combats}
           </span>
         </div>
       </div>
