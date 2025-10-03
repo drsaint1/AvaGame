@@ -279,7 +279,8 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
 };
 
 export const useErrorHandler = () => {
-  const handleError = (error: Error, errorInfo: { componentStack: string }) => {
+  const handleError = (_error: Error, _errorInfo: { componentStack: string }) => {
+    // Error handler function - currently a no-op
   };
 
   return { handleError };

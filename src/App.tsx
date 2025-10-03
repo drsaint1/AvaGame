@@ -822,9 +822,13 @@ function GameWrapper() {
     );
   }
 
+  const isSpaceView = false; // currentView === "space" - disabled
+  const isFightingView = currentView === "fighting";
+  const showNavigation = !isFightingView && !isSpaceView;
+
   return (
     <div style={{ minHeight: "100vh", position: "relative" }}>
-      {currentView !== "fighting" && currentView !== "space" && (
+      {showNavigation && (
         <div
           style={{
             position: "absolute",
@@ -857,12 +861,12 @@ function GameWrapper() {
               }
               style={{
                 background:
-                  currentView === "space"
+                  isSpaceView
                     ? "linear-gradient(45deg, #ff6b6b, #4ecdc4)"
                     : "transparent",
-                color: currentView === "space" ? "#000" : "#fff",
+                color: isSpaceView ? "#000" : "#fff",
                 border:
-                  currentView === "space"
+                  isSpaceView
                     ? "none"
                     : "1px solid rgba(255,255,255,0.2)",
                 padding: "8px 12px",
@@ -872,18 +876,18 @@ function GameWrapper() {
                 fontWeight: "600",
                 transition: "all 0.3s ease",
                 boxShadow:
-                  currentView === "space"
+                  isSpaceView
                     ? "0 4px 15px rgba(255,107,107,0.4)"
                     : "none",
               }}
               onMouseEnter={(e) => {
-                if (currentView !== "space") {
+                if (!isSpaceView) {
                   e.currentTarget.style.background = "rgba(255,255,255,0.1)";
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }
               }}
               onMouseLeave={(e) => {
-                if (currentView !== "space") {
+                if (!isSpaceView) {
                   e.currentTarget.style.background = "transparent";
                   e.currentTarget.style.transform = "translateY(0px)";
                 }

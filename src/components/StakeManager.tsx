@@ -12,7 +12,7 @@ const StakeManager: React.FC<StakeManagerProps> = ({ onNavigateToMainMenu }) => 
     playerShips,
     stakeShip,
     unstakeShip,
-    isPending,
+    // isPending,
     error,
     isConnected: contractConnected,
   } = useFightingContract();
@@ -27,7 +27,7 @@ const StakeManager: React.FC<StakeManagerProps> = ({ onNavigateToMainMenu }) => 
       setTxStatus("pending");
       setTxMessage(`Staking ${shipName}...`);
 
-      const txHash = await stakeShip(shipId);
+      await stakeShip(shipId);
 
       setTxStatus("success");
       setTxMessage(`✅ ${shipName} staked successfully!`);
@@ -56,7 +56,7 @@ const StakeManager: React.FC<StakeManagerProps> = ({ onNavigateToMainMenu }) => 
       setTxStatus("pending");
       setTxMessage(`Unstaking ${shipName}...`);
 
-      const txHash = await unstakeShip(shipId);
+      await unstakeShip(shipId);
 
       setTxStatus("success");
       setTxMessage(`✅ ${shipName} unstaked successfully!`);

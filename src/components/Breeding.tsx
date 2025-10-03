@@ -53,7 +53,7 @@ const Breeding: React.FC<BreedingProps> = ({ onNavigateToMainMenu }) => {
 
 
 
-  const breedableShips = allShipsWithStatus.filter(ship => ship.breedingStatus.canBreed);
+  // const breedableShips = allShipsWithStatus.filter(ship => ship.breedingStatus.canBreed);
 
   const handleBreeding = async () => {
     if (!selectedShip1 || !selectedShip2) return;

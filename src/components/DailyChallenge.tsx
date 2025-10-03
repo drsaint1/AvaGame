@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import { useFightingContract } from "../hooks/useFightingContract";
 
@@ -17,9 +17,9 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({
     dailyRewardAmount,
     isDailyRewardAvailable,
     getTimeUntilNextReward,
-    playerStats,
-    selectedShip,
-    isPending,
+    // playerStats,
+    // selectedShip,
+    // isPending,
     error,
   } = useFightingContract();
 
@@ -32,7 +32,7 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({
       setTxStatus("pending");
       setTxMessage("Claiming daily reward...");
 
-      const txHash = await claimDailyReward();
+      await claimDailyReward();
 
       setTxStatus("success");
       setTxMessage(`🎉 Daily reward claimed successfully!`);
@@ -223,7 +223,7 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {dailyChallenges.map((challenge, index) => (
+            {dailyChallenges.map((challenge) => (
               <div
                 key={challenge.id}
                 className="group bg-gray-900/60 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/80 rounded-xl p-4 transition-all duration-300 hover:scale-105 relative overflow-hidden"
@@ -300,10 +300,10 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({
 
               <button
                 onClick={handleClaimReward}
-                disabled={isPending || txStatus === "pending"}
+                disabled={txStatus === "pending"}
                 className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-black font-bold rounded-xl transition-all duration-300 transform hover:scale-105"
               >
-                {isPending || txStatus === "pending" ? (
+                {txStatus === "pending" ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
                     <span>Claiming...</span>

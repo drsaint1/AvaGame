@@ -12,11 +12,11 @@ const BuyShip: React.FC<BuyShipProps> = ({ onNavigateToMainMenu, onBreedShip }) 
   const {
     mintStarterShip,
     mintPremiumShip,
-    mintDestroyer,
+    // mintDestroyer,
     mintBattlecruiser,
     hasShipType,
     refetchShips,
-    isPending,
+    // isPending,
     error,
   } = useFightingContract();
 

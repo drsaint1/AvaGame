@@ -205,7 +205,7 @@ const TournamentResultsModal: React.FC<TournamentResultsModalProps> = ({
 
     setLoading(true);
     try {
-      const [tournamentWinners, tournamentScoresData] = await Promise.all([
+      const [, tournamentScoresData] = await Promise.all([
         readContract(config, {
           address: TOURNAMENTS_CONTRACT_ADDRESS,
           abi: TOURNAMENTS_ABI,
@@ -519,7 +519,7 @@ const TournamentLobby: React.FC<TournamentLobbyProps> = ({
         args: [BigInt(tournamentId), address],
       });
 
-      const [participated, playerShipIds, , bestScore] = playerTournamentData;
+      const [participated, , , bestScore] = playerTournamentData;
 
       const hasCompleted = participated && Number(bestScore) > 0;
 
@@ -939,7 +939,7 @@ const TournamentLobby: React.FC<TournamentLobbyProps> = ({
       }
 
 
-      const txHash = await writeContractAsync({
+      await writeContractAsync({
         address: TOURNAMENTS_CONTRACT_ADDRESS,
         abi: TOURNAMENTS_ABI,
         functionName: "createTournament",
@@ -993,7 +993,7 @@ const TournamentLobby: React.FC<TournamentLobbyProps> = ({
       setLoading(true);
 
 
-      const txHash = await writeContractAsync({
+      await writeContractAsync({
         address: TOURNAMENTS_CONTRACT_ADDRESS,
         abi: TOURNAMENTS_ABI,
         functionName: "enterTournament",

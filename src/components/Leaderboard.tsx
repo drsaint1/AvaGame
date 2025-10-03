@@ -54,7 +54,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
           args: [100n],
         });
 
-        const [players, scores, levels, totalXPs, shipCounts] = leaderboardData;
+        const [players, scores, levels, totalXPs] = leaderboardData;
 
         if (players.length === 0) {
           setLeaderboard([]);

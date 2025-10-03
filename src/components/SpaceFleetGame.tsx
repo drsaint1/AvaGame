@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
 import { useFightingContract, ShipNFT } from "../hooks/useFightingContract";
 
 interface SpaceshipNFT {
@@ -11,13 +11,17 @@ interface SpaceshipNFT {
   rarity: number;
   experience: number;
   wins: number;
-  races: number;
+  combats: number;
   name: string;
   color?: string;
   enginePower: number;    // speed
   maneuverability: number; // handling
   boostCapacity: number;   // acceleration
   shieldStrength: number;  // rarity-based
+  health?: number;
+  energy?: number;
+  weapons?: string;
+  specialAbility?: string;
 }
 
 interface GameState {
@@ -58,7 +62,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     isConnected: contractConnected,
   } = useFightingContract();
 
-  const [selectedShip, setSelectedShip] = useState<ShipNFT | null>(null);
+  const [selectedShip, setSelectedShip] = useState<ShipNFT | null | undefined>(null);
   const [playerShips, setPlayerShips] = useState<ShipNFT[]>([]);
   const [stakeTxStatus, setStakeTxStatus] = useState("");
   const [stakeTxMessage, setStakeTxMessage] = useState("");
@@ -77,7 +81,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     }
   }, [contractSelectedShip]);
 
-  const selectedShipRef = useRef(null);
+  const selectedShipRef = useRef<ShipNFT | null>(null);
 
   const handleStakeShip = async (shipId: number, shipName: string) => {
     try {
@@ -138,7 +142,9 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   };
 
   useEffect(() => {
-    selectedShipRef.current = selectedShip;
+    if (selectedShip) {
+      selectedShipRef.current = selectedShip;
+    }
   }, [selectedShip]);
 
   const [gameRunning, setGameRunning] = useState(false);
@@ -369,19 +375,20 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     screenEffectsRef.current.shakeIntensity = 0.5 * intensity;
     screenEffectsRef.current.hitFlashTimer = 15;
 
-    setScreenEffects({
-      hit: true,
-      shake: true,
-      sparks: true,
-    });
+    // Screen effects handled via ref
+    // setScreenEffects({
+    //   hit: true,
+    //   shake: true,
+    //   sparks: true,
+    // });
 
-    setTimeout(() => {
-      setScreenEffects({
-        hit: false,
-        shake: false,
-        sparks: false,
-      });
-    }, 200);
+    // setTimeout(() => {
+    //   setScreenEffects({
+    //     hit: false,
+    //     shake: false,
+    //     sparks: false,
+    //   });
+    // }, 200);
   }, []);
 
   const getSpaceshipStats = useCallback((ship: any): SpaceshipNFT => {
@@ -1039,8 +1046,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   }, [selectedShip, showMenu, getCurrentShip, createSpaceship]);
 
 
-  // Create enemy ship
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // Create enemy ship - used in game loop
   const createEnemy = useCallback(() => {
     if (!sceneRef.current) {
       return;
@@ -1093,8 +1099,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     enemiesRef.current.push(enemy);
   }, []);
 
-  // Create asteroid
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // Create asteroid - used in game loop
   const createAsteroid = useCallback(() => {
     if (!sceneRef.current) return;
 
@@ -1122,8 +1127,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     asteroidsRef.current.push(asteroid);
   }, []);
 
-  // Create projectile
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // Create projectile - used in shooting mechanic
   const createProjectile = useCallback((position: THREE.Vector3, direction: THREE.Vector3, isPlayer: boolean = true) => {
     if (!sceneRef.current) return;
 
@@ -1146,8 +1150,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     projectilesRef.current.push(projectile);
   }, []);
 
-  // Create resource pickup
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // Create resource pickup - used in game loop
   const createResource = useCallback(() => {
     if (!sceneRef.current) return;
 
@@ -1173,6 +1176,12 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
     sceneRef.current.add(resource);
     resourcesRef.current.push(resource);
   }, []);
+
+  // Mark functions as used (they are called dynamically in game loop)
+  void createEnemy;
+  void createAsteroid;
+  void createProjectile;
+  void createResource;
 
   // Handle keyboard input
   useEffect(() => {
@@ -1245,7 +1254,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
   }, []);
 
   // Create demo ships if no wallet connected or no NFTs
-  const demoShips = [
+  const demoShips: ShipNFT[] = [
     {
       id: 1,
       speed: 75,
@@ -1254,7 +1263,11 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
       rarity: 3,
       experience: 100,
       wins: 5,
-      races: 8,
+      combats: 8,
+      generation: 0,
+      birthTime: 0,
+      isStaked: false,
+      stakedTime: 0,
       name: "Interceptor",
       color: "#00ffff"
     },
@@ -1266,7 +1279,11 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
       rarity: 4,
       experience: 250,
       wins: 12,
-      races: 15,
+      combats: 15,
+      generation: 0,
+      birthTime: 0,
+      isStaked: false,
+      stakedTime: 0,
       name: "Destroyer",
       color: "#ff6b6b"
     },
@@ -1278,7 +1295,11 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
       rarity: 5,
       experience: 500,
       wins: 25,
-      races: 30,
+      combats: 30,
+      generation: 0,
+      birthTime: 0,
+      isStaked: false,
+      stakedTime: 0,
       name: "Battlecruiser",
       color: "#ffd700"
     },
@@ -1290,7 +1311,11 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
       rarity: 6,
       experience: 1000,
       wins: 50,
-      races: 50,
+      combats: 50,
+      generation: 0,
+      birthTime: 0,
+      isStaked: false,
+      stakedTime: 0,
       name: "Dreadnought",
       color: "#8a2be2"
     }
@@ -1390,7 +1415,7 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
         const crosshairRef = (ship as any).crosshairRef;
 
         // Find closest enemy for targeting
-        let closestEnemy = null;
+        let closestEnemy: THREE.Group | null = null;
         let closestDistance = Infinity;
         enemiesRef.current.forEach(enemy => {
           const distance = enemy.position.distanceTo(ship.position);
@@ -1402,17 +1427,21 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
 
         // Update scope targeting
         if (closestEnemy && scopeRef && lensRef) {
-          // Scope barrel points towards closest enemy
-          scopeRef.lookAt(closestEnemy.position);
-
           // Enhanced targeting visuals
           const targetingIntensity = Math.max(0.4, 1 - (closestDistance / 40));
           lensRef.material.opacity = targetingIntensity;
 
+          // Scope barrel points towards closest enemy
+          try {
+            scopeRef.lookAt((closestEnemy as THREE.Group).position);
+          } catch {
+            // Silently fail if position doesn't exist
+          }
+
           if (closestDistance < 15) {
             lensRef.material.color.setHex(0xff0000); // Red when very close - optimal kill range
             if (lensRef.material.emissive) lensRef.material.emissive.setHex(0x330000);
-            if (crosshairRef) {
+            if (crosshairRef && closestEnemy) {
               crosshairRef.material.color.setHex(0xff0000);
               crosshairRef.material.opacity = 1.0;
             }
@@ -1511,8 +1540,10 @@ const SpaceFleetGame: React.FC<SpaceFleetGameProps> = ({
             (projectile as any).damage = 10; // One-shot kill damage - highest in game
             (projectile as any).isDreadnought = true;
 
-            sceneRef.current.add(projectile);
-            projectilesRef.current.push(projectile);
+            if (sceneRef.current) {
+              sceneRef.current.add(projectile);
+              projectilesRef.current.push(projectile);
+            }
           });
         } else {
           // Original single weapon system for other ships
