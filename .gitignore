@@ -1,0 +1,233 @@
+# Dependencies
+node_modules/
+*.pnp
+.pnp.js
+
+# Production builds
+dist/
+dist-ssr/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Hardhat build artifacts
+artifacts/
+cache/
+typechain/
+typechain-types/
+
+# Deployment files (keep deployment scripts, exclude deployment outputs)
+deployment-*.json
+deployments/
+
+# Scripts directory - ignore all except deploy-contracts.js
+scripts/*
+!scripts/deploy-contracts.js
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# MacOS
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Test files
+test-results/
+playwright-report/
+
+# Specific component files to ignore
+src/components/CarRaceGame.tsx
+use.md
+error.md
+
+# Smart Contract Secrets & Keys
+*.secret
+*.key
+mnemonic.txt
+private-keys.txt
+wallet.json
+keystore/
+
+# Hardhat & Blockchain
+.openzeppelin/
+.hardhat/
+contracts/flattened/
+flatten.txt
+
+# Gas reports
+gas-report.txt
+.gas-snapshot
+
+# Solhint
+.solhint.json
+
+# Tenderly
+.tenderly/
+
+# Alchemy & Infura
+alchemy_*.json
+infura_*.json
+
+# Deployment & Migration files
+migrations/*.json
+!migrations/1_initial_migration.js
+deployed_addresses.txt
+
+# ABIs (if auto-generated)
+abis/
+
+# Verification files
+verify.txt
+verified_contracts.json
+
+# Lock files (choose one package manager)
+# Uncomment the one you DON'T use
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Vite
+*.local
+.cache/
+
+# Testing
+.coverage_artifacts/
+.coverage_cache/
+.coverage_contracts/
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# IDE - WebStorm
+.idea/
+*.iml
+out/
+
+# IDE - VSCode
+.history/
+
+# Misc
+.cache
+.parcel-cache
+.next/
+.nuxt/
+.vercel
+.serverless/
+
+# Documentation builds
+docs/.vuepress/dist
+docs/_book
+
+# Storybook
+storybook-static/
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+debug.log
+
+# Local development
+.local/
+local/
+
+# Subgraph
+subgraph/generated/
+subgraph/build/
+
+# IPFS
+.ipfs/
+
+# Foundry
+out/
+broadcast/
+
+# Claude AI
+.claude/
+.claude.json
+.claude.json.backup
