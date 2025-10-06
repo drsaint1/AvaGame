@@ -166,27 +166,7 @@ const BuyShip: React.FC<BuyShipProps> = ({ onNavigateToMainMenu, onBreedShip }) 
     </div>
   );
 
-  if (!isConnected) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-6">
-        <div className="max-w-md w-full text-center space-y-8">
-          <div className="text-8xl mb-6">🛒</div>
-          <h1 className="font-space text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-            Ship Store
-          </h1>
-          <p className="text-gray-400 text-lg leading-relaxed">
-            Please connect your wallet to purchase spaceships and start your journey
-          </p>
-          <button
-            onClick={onNavigateToMainMenu}
-            className="w-full px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 rounded-xl font-medium transition-all duration-300 transform hover:scale-105"
-          >
-            ← Back to Main Menu
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Allow browsing ships without wallet connection
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
@@ -286,7 +266,7 @@ const BuyShip: React.FC<BuyShipProps> = ({ onNavigateToMainMenu, onBreedShip }) 
                       if (isOwned) return;
                       if (ship.isBreeding && onBreedShip) {
                         onBreedShip();
-                      } else if (ship.mintFunction) {
+                      } else if (ship.mintFunction && isConnected) {
                         handleMintShip(ship.mintFunction, ship.name);
                       }
                     }}
@@ -310,6 +290,8 @@ const BuyShip: React.FC<BuyShipProps> = ({ onNavigateToMainMenu, onBreedShip }) 
                            ship.isBreeding ? "Breeding..." : "Minting..."}
                         </span>
                       </div>
+                    ) : !isConnected ? (
+                      "Preview Only"
                     ) : (
                       ship.isBreeding ? `🧬 Breed ${ship.name}` : `Buy ${ship.name}`
                     )}

@@ -48,7 +48,7 @@ const MainMenu: React.FC<MainMenuProps> = ({
       icon: "🛒",
       gradient: "from-yellow-400 to-orange-400",
       hoverGradient: "from-yellow-500 to-orange-500",
-      available: isConnected,
+      available: true,
       category: "Store",
     },
     {
@@ -58,7 +58,7 @@ const MainMenu: React.FC<MainMenuProps> = ({
       icon: "🔒",
       gradient: "from-orange-400 to-red-400",
       hoverGradient: "from-orange-500 to-red-500",
-      available: isConnected,
+      available: true,
       category: "Earn",
     },
     {

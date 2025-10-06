@@ -628,6 +628,76 @@ export const useFightingContract = () => {
     query: { enabled: !!address },
   });
 
+  // Create mock ships for users without wallet connection
+  const createMockShips = useCallback((): ShipNFT[] => {
+    return [
+      {
+        id: 1,
+        speed: 65,
+        handling: 70,
+        acceleration: 68,
+        rarity: 1,
+        experience: 0,
+        wins: 0,
+        combats: 0,
+        generation: 1,
+        birthTime: Date.now() / 1000,
+        isStaked: false,
+        stakedTime: 0,
+        name: "Interceptor",
+        color: "Purple",
+      },
+      {
+        id: 2,
+        speed: 70,
+        handling: 68,
+        acceleration: 72,
+        rarity: 3,
+        experience: 0,
+        wins: 0,
+        combats: 0,
+        generation: 1,
+        birthTime: Date.now() / 1000,
+        isStaked: false,
+        stakedTime: 0,
+        name: "Destroyer",
+        color: "Blue",
+      },
+      {
+        id: 3,
+        speed: 80,
+        handling: 75,
+        acceleration: 78,
+        rarity: 5,
+        experience: 0,
+        wins: 0,
+        combats: 0,
+        generation: 1,
+        birthTime: Date.now() / 1000,
+        isStaked: false,
+        stakedTime: 0,
+        name: "Dreadnought",
+        color: "Gold",
+      },
+      {
+        id: 4,
+        speed: 75,
+        handling: 80,
+        acceleration: 85,
+        rarity: 5,
+        experience: 0,
+        wins: 0,
+        combats: 0,
+        generation: 1,
+        birthTime: Date.now() / 1000,
+        isStaked: false,
+        stakedTime: 0,
+        name: "Battlecruiser",
+        color: "Green",
+      },
+    ];
+  }, []);
+
   useWatchContractEvent({
     address: FIGHTING_CONTRACT_ADDRESS,
     abi: FIGHTING_ABI,
@@ -650,6 +720,17 @@ export const useFightingContract = () => {
 
   useEffect(() => {
     const loadShipDetails = async () => {
+      // If not connected, use mock ships
+      if (!isConnected) {
+        const mockShips = createMockShips();
+        setPlayerShips(mockShips);
+        if (mockShips.length > 0 && !selectedShip) {
+          setSelectedShip(mockShips[0]);
+        }
+        setLoading(false);
+        return;
+      }
+
       if (!playerShipsData || playerShipsData.length === 0) {
         setPlayerShips([]);
         return;
@@ -743,7 +824,7 @@ export const useFightingContract = () => {
     };
 
     loadShipDetails();
-  }, [playerShipsData, selectedShip]);
+  }, [playerShipsData, selectedShip, isConnected, createMockShips]);
 
   useEffect(() => {
     if (playerStatsData) {
